@@ -1,0 +1,52 @@
+[
+    {
+        "FirstName": "Soha",
+        "LastName": "M",
+        "Role": "Software Engineer",
+        "Email": "soha49084@gmail.com"
+    },
+    {
+        "FirstName": "K",
+        "LastName": "Fox",
+        "Role": "HR",
+        "Email": "angus.mccloud@gmail.com"
+    },
+    {
+        "FirstName": "Basma",
+        "LastName": "E",
+        "Role": "UI/UX Designer",
+        "Email": "basma1991es@gmail.com"
+    },
+    {
+        "FirstName": "Kelli",
+        "LastName": "G",
+        "Role": "Data Scientist",
+        "Email": "kgpythonpractice@gmail.com"
+    },
+    {
+        "FirstName": "Benoît",
+        "LastName": "Hespel",
+        "Role": "Head of AI @ Proximus Ada",
+        "Email": "benoit.hespel@proximus-ada.com"
+    },
+    {
+        "FirstName": "Bas",
+        "LastName": "Van Assche",
+        "Role": "CSIRT Analyst @ Proximus Ada",
+        "Email": "bas.van.assche@proximus-ada.com"
+    },
+    {
+        "FirstName": "Rasmita",
+        "LastName": "A",
+        "Role": "Data Engineer",
+        "Email": "dait96@gmail.com"
+    },
+    {
+        "FirstName": "Adeeba",
+        "LastName": "T",
+        "Role": "Data Engineer",
+        "Email": "adhibecode@gmail.com"
+    }
+
+    
+]
