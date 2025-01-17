@@ -3,50 +3,56 @@
         "FirstName": "Soha",
         "LastName": "M",
         "Role": "Software Engineer",
-        "Email": "soha49084@gmail.com"
+        "Email": "soha49084@gmail.com",
+        "PreferredLanguage": "English"
     },
     {
         "FirstName": "K",
         "LastName": "Fox",
         "Role": "HR",
-        "Email": "angus.mccloud@gmail.com"
+        "Email": "angus.mccloud@gmail.com",
+        "PreferredLanguage": "English"
     },
     {
         "FirstName": "Basma",
         "LastName": "E",
         "Role": "UI/UX Designer",
-        "Email": "basma1991es@gmail.com"
+        "Email": "basma1991es@gmail.com",
+        "PreferredLanguage": "English"
     },
     {
         "FirstName": "Kelli",
         "LastName": "G",
         "Role": "Data Scientist",
-        "Email": "kgpythonpractice@gmail.com"
+        "Email": "kgpythonpractice@gmail.com",
+        "PreferredLanguage": "English"
     },
     {
         "FirstName": "Benoît",
         "LastName": "Hespel",
         "Role": "Head of AI @ Proximus Ada",
-        "Email": "benoit.hespel@proximus-ada.com"
+        "Email": "benoit.hespel@proximus-ada.com",
+        "PreferredLanguage": "English"
     },
     {
         "FirstName": "Bas",
         "LastName": "Van Assche",
         "Role": "CSIRT Analyst @ Proximus Ada",
-        "Email": "bas.van.assche@proximus-ada.com"
+        "Email": "bas.van.assche@proximus-ada.com",
+        "PreferredLanguage": "English"
     },
     {
         "FirstName": "Rasmita",
         "LastName": "D",
         "Role": "Data Engineer",
-        "Email": "rdait96@gmail.com"
+        "Email": "rdait96@gmail.com",
+        "PreferredLanguage": "English"
     },
     {
         "FirstName": "Adeeba",
         "LastName": "T",
         "Role": "Data Engineer",
-        "Email": "adhibecode@gmail.com"
+        "Email": "adhibecode@gmail.com",
+        "PreferredLanguage": "English"
     }
-
-    
 ]
