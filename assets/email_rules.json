@@ -1,0 +1,42 @@
+[
+    {
+        "Reason": "Account Suspicious Activity",
+        "Roles": ["IT", "Data Security"],
+        "CreatedBy": ["IT", "Data Security"]
+    },
+    {
+        "Reason": "Password Expiry Notification",
+        "Roles": ["IT", "Software Engineer"],
+        "CreatedBy": ["IT"]
+    },
+    {
+        "Reason": "Exclusive Training Webinar",
+        "Roles": ["HR"],
+        "CreatedBy": ["HR"]
+    },
+    {
+        "Reason": "Email Storage Full",
+        "Roles": ["IT", "Data Security"],
+        "CreatedBy": ["IT", "Data Security"]
+    },
+    {
+        "Reason": "Important Security Update",
+        "Roles": ["IT", "Data Security"],
+        "CreatedBy": ["IT", "Data Security"]
+    },
+    {
+        "Reason": "New Policy Acknowledgment Required",
+        "Roles": ["HR"],
+        "CreatedBy": ["HR"]
+    },
+    {
+        "Reason": "Urgent Billing Issue",
+        "Roles": ["Finance"],
+        "CreatedBy": ["Finance"]
+    },
+    {
+        "Reason": "System Maintenance Notification",
+        "Roles": ["IT", "Data Engineer"],
+        "CreatedBy": ["IT"]
+    }
+]
