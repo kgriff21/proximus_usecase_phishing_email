@@ -159,5 +159,31 @@
         "CreatedBy": [
             "Jan Van Acoleyen"
         ]
+    },
+    {
+        "Reason": "\"Speed fine\"",
+        "Roles": ["Manger Operational Services"],
+        "CreatedBy": ["Alphabet"]
+    },
+    {
+        "Reason": "\"Leasing car payment overdue\"",
+        "Roles": ["Manger Operational Services"],
+        "CreatedBy": ["Alphabet"]
+    },
+    {
+        "Reason": "\"Unauthorized leasing car access\"",
+        "Roles": ["Manger Operational Services"],
+        "CreatedBy": ["Alphabet"]
+    },
+    {
+        "Reason": "\"Pending insurance premium for DKV\"",
+        "Roles": ["DKV Insurance Management"],
+        "CreatedBy": ["DKV Insurance Management"]
+    },
+    {
+        "Reason": "\"Suspicious insurance claim detected for DKV\"",
+        "Roles": ["DKV Insurance Management"],
+        "CreatedBy": ["DKV Insurance Management"]
     }
+    
 ]
