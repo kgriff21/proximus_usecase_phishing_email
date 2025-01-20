@@ -20,6 +20,73 @@ class GophishWrapper:
             "Content-Type": "application/json"
         }
 
+    def create_smtp_profile(self, name: str, host: str, port: int, username: str, password: str, from_address: str, tls: bool = True) -> Dict[str, Any]:
+        """
+        Create a new SMTP profile.
+
+        :param name: The name of the SMTP profile.
+        :param host: The SMTP server host (e.g., 'smtp.gmail.com').
+        :param port: The SMTP server port (usually 465 for SSL or 587 for TLS).
+        :param username: The username for SMTP authentication.
+        :param password: The password for SMTP authentication.
+        :param from_address: The "from" email address that will appear in the phishing emails.
+        :param ssl: Whether to use SSL (default is True). 
+        :return: The response from the API call (SMTP profile data).
+        """
+        data = {
+            "name": name,
+            "host": host,
+            "port": port,
+            "username": username,
+            "password": password,
+            "from_address": from_address,
+            "tls": tls
+            # ssl: is possibly but outdated and insecure
+        }
+        return self._make_request("POST", "/smtp", data)
+
+    def get_smtp_profiles(self) -> Dict[str, Any]:
+        """
+        Get all SMTP profiles.
+
+        :return: A list of all SMTP profiles.
+        """
+        return self._make_request("GET", "/smtp")
+
+    def update_smtp_profile(self, profile_id: int, name: str, host: str, port: int, username: str, password: str, from_address: str, tls: bool = True) -> Dict[str, Any]:
+        """
+        Update an existing SMTP profile.
+
+        :param profile_id: The ID of the SMTP profile to update.
+        :param name: The new name for the SMTP profile.
+        :param host: The new SMTP server host.
+        :param port: The new SMTP server port.
+        :param username: The new username for SMTP authentication.
+        :param password: The new password for SMTP authentication.
+        :param from_address: The new "from" email address.
+        :param ssl: Whether to use SSL (default is True).
+        :return: The response from the API call (updated SMTP profile data).
+        """
+        data = {
+            "name": name,
+            "host": host,
+            "port": port,
+            "username": username,
+            "password": password,
+            "from_address": from_address,
+            "tls":tls
+        }
+        return self._make_request("PUT", f"/smtp/{profile_id}", data)
+
+    def delete_smtp_profile(self, profile_id: int) -> Dict[str, Any]:
+        """
+        Delete an SMTP profile.
+
+        :param profile_id: The ID of the SMTP profile to delete.
+        :return: The response from the API call (confirmation of deletion).
+        """
+        return self._make_request("DELETE", f"/smtp/{profile_id}")
+
     def _make_request(self, method: str, endpoint: str, data: Dict[str, Any] = None) -> Any:
         """
         Makes HTTP requests to the Gophish API.
@@ -30,7 +97,7 @@ class GophishWrapper:
         :return: The response in JSON format, or None if an error occurs.
         """
         url = f"{self.api_url}{endpoint}"
-        response = requests.request(method, url, json=data, headers=self.headers)
+        response = requests.request(method, url, json=data, headers=self.headers, verify="C:/Program Files/GoPhish/gophish_admin.crt")
         
         # Handle errors
         if response.status_code != 200:
@@ -123,3 +190,4 @@ class GophishWrapper:
         :return: The report data of the campaign.
         """
         return self._make_request("GET", f"/campaigns/{campaign_id}/report")
+    
