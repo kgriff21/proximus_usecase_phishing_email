@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {{
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eef1f5;
+            color: #333;
+            line-height: 1.6;
+        }}
+        .email-container {{
+            width: 100%;
+            max-width: 700px;
+            margin: 40px auto;
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }}
+        .header img {{
+            max-width: 120px;
+            display: block;
+            margin: 10px auto 10px auto;
+            position: relative;
+        }}
+        .body {{
+            padding: 30px;
+            font-size: 16px;
+        }}
+        .body h1 {{
+            font-size: 22px;
+            font-weight: bold;
+            color: #0046a8;
+            margin-bottom: 20px;
+        }}
+        .body p {{
+            margin: 15px 0;
+        }}
+        .cta {{
+            display: block;
+            width: fit-content;
+            margin: 25px auto;
+            padding: 15px 30px;
+            background-color: #0046a8;
+            color: #fff;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+        }}
+        .cta:hover {{
+            background-color: #003580;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+        }}
+        .footer {{
+            background-color: #f9f9f9;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }}
+        .footer p {{
+            margin: 5px 0;
+        }}
+        .footer a {{
+            color: #0046a8;
+            text-decoration: none;
+        }}
+        .footer a:hover {{
+            text-decoration: underline;
+        }}
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <img src="{logo}" alt="Company Logo">
+        </div>
+        <div class="body">
+            <h1>{subject}</h1>
+            <p>{body}</p>
+            <p>Thank you,<br>{sender_role} Team</p>
+            <a class="cta" href="{link}">Take Action Now</a>
+        </div>
+        <div class="footer">
+            <p>Proximus 'Boreal' Offices</p>
+            <p>Vooruitgangstraat 55, 1210 Sint-Joost-ten-Node</p>
+            <p>+32 2 205 4000</p>
+            <p><a href="https://www.proximus.be" target="_blank">Visit Proximus Belgium Website</a></p>
+        </div>
+    </div>
+</body>
+</html>
