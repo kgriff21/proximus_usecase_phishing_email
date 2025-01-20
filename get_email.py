@@ -72,7 +72,7 @@ def generate_email_content(model, recipient, sender_role, reason, fake_link):
 
     return email_subject, email_body
 
-def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLATE,fallback):
+def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLATE,fallback,email_rules):
     """Generate phishing emails for all recipients."""
     emails = []
    
@@ -85,6 +85,22 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
         if rule:
             sender_role = random.choice(rule["CreatedBy"])
             reason = rule["Reason"]
+
+        if recipient.get("CarLease") and random.random() > 0.5:
+            # Filter email rules for "Leasing Department"
+            leasing_rules = [rule for rule in email_rules if "Manger Operational Services" in rule["Roles"]]
+            if leasing_rules:
+                selected_rule = random.choice(leasing_rules)
+                reason = selected_rule["Reason"]
+                sender_role = random.choice(selected_rule["CreatedBy"])
+
+        elif recipient.get("DependentCount", 0) > 0 and random.random() > 0.5:
+            # Filter email rules for "DKV Insurance Management"
+            insurance_rules = [rule for rule in email_rules if "DKV Insurance Management" in rule["Roles"]]
+            if insurance_rules:
+                selected_rule = random.choice(insurance_rules)
+                reason = selected_rule["Reason"]
+                sender_role = random.choice(selected_rule["CreatedBy"])
 
         try:
             subject, body = generate_email_content(model, recipient, sender_role, reason, fake_link)
@@ -143,7 +159,7 @@ def main():
     rules_file = "./assets/email_rules.json"
     output_file = "./assets/emails.json"
     fallback_file = "./assets/fallback.json"
-    fake_link = "https://secure-update.example.com"  # Replace with your fake link
+    fake_link = ""  # Replace with your fake link
     html_template_file =  "assets/email_html_template.html"
 
     try:
@@ -166,7 +182,7 @@ def main():
         role_to_rule_map = create_role_to_rule_map(email_rules)
 
         # Generate phishing emails
-        emails = generate_emails(model, recipients, role_to_rule_map, fake_link,email_html_template,fallback)
+        emails = generate_emails(model, recipients, role_to_rule_map, fake_link,email_html_template,fallback,email_rules)
 
         # Example: Save emails to HTML files --- to be deleted
         for idx, email in enumerate(emails):
@@ -176,6 +192,11 @@ def main():
 
         # Save emails to file
         save_emails_to_file(emails, output_file)
+
+          # Load the JSON file
+        with open(output_file, 'r', encoding='utf-8') as file:
+            emails = json.load(file)
+
 
     except Exception as e:
         print(f"Error: {e}")
