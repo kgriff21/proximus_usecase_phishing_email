@@ -100,11 +100,7 @@ class LandingPages:
         return str(soup)
 
 
-    def create_landing_page_for_user(self, userId):
-        api = self.init_gophish_api()
-        if api is None:
-            print(f'error in in itialising api for gophish')
-            exit()
+    def create_landing_page_for_user(self, api, userId):
 
         explanation = self.get_user_phishing_explanation(userId)
         
