@@ -44,6 +44,7 @@ def create_role_to_rule_map(email_rules):
 
 def get_body_prompt(prompt,recipient, sender_role, reason, fake_link ):
     """Return body prompt based on prompt type"""
+  
     if(prompt == "General"):        
         body_prompt = f"""
         **Parameters:**
@@ -63,46 +64,62 @@ def get_body_prompt(prompt,recipient, sender_role, reason, fake_link ):
         4. Don't use Hi or Hello only Dear .
         5. Use "Thank you" followed by `{sender_role}` to close the email.
         6. The email must be concise, no more than 4-5 sentences.
-        7. Provide only the body of the email (no subject line or additional notes).
-        8. The signature should include only the sender's role or department (e.g., "Data Analytics Team")—no placeholder names.
-        9. Avoid explicitly mentioning dates, times, or indicating that this was AI-generated.
-        10. Avoid any mention of clicking links, links themselves or attached files .Instead, provide a complete email with no missing details
-        11. Avoid any mention of placeholders like `[Link]`, `[Date]`, `[Action]`.
-        12. Avoid any generically formatted placeholders.
+        7. Incorporate this fake link naturally: {fake_link} and show it as following:
+            - real html link text <a class="hyperlink">click here</a>'.
+            - or html button html <a class="cta">click here</a>'.
+        8. Provide only the body of the email (no subject line or additional notes).
+        9. The signature should include only the sender's role or department (e.g., "Data Analytics Team")—no placeholder names.
+        10. Avoid explicitly mentioning dates, times, or indicating that this was AI-generated.
+        11. Avoid any mention of clicking links, links themselves or attached files .Instead, provide a complete email with no missing details
+        12. Avoid any mention of placeholders like `[Link]`, `[Date]`, `[Action]`.
+        13. Avoid any generically formatted placeholders.
 
         **Output format**:  
         Provide only the email body with appropriate line breaks for spacing, following the specified structure and tone.
         """
     elif prompt == "CarLease":
-            body_prompt = f"""
-            Write a phishing email designed for an anti-phishing campaign related to car lease services:
-            - Sender: A representative from the {sender_role} department.
-            - Reason: {reason} (e.g., payment overdue or unauthorized access detection).
-            - Incorporate this fake link naturally: {fake_link}.
-            - The email should also be in the {recipient['PreferredLanguage']}.
-            The email should be concise, professional, and include a plausible call to action, such as reviewing the lease details or verifying account security.
-            The email should be similar to the following example:
-                "Dear customer,
-                We would like to inform you with this message regarding a fine:
-                    Driver : {recipient['FirstName']} 
-                             {recipient['LastName']}
+        body_prompt = f"""
+            Write a phishing email designed for an anti-phishing campaign related to car lease services.
 
-                This mail is sent you via our partner Unifiedpost.
-                More information can be found on our website.
-                Through below link {fake_link} you can consult the letter and realted documents.
-
-                Kind regards,
-                Manager Opertional Services
-                {sender_role}"                
+        **Parameters:**
+            Sender: A representative from the {sender_role} department.
+            Reason: {reason} (e.g., payment overdue or unauthorized access detection).
+            Fake Link: Incorporate this fake link naturally: {fake_link} and show it as following:
+            - real html link text <a class="hyperlink">click here</a>'.
+            - or html button html <a class="cta">click here</a>'.
+            Language: The email should be written in {recipient['PreferredLanguage']}.
+        
+        **Guidelines**:
+            1. The email must be concise, professional, and realistic.
+            2. Maintain a polite and professional tone throughout the email.
+            3. Include a plausible call to action, such as:
+                Reviewing lease details.
+                Verifying account security.
+                Addressing overdue payments.
+            4. Seamlessly incorporate the fake link into the email as part of the call to action.
+            5. Personalize the email with the recipient’s information:
+                First name: {recipient['FirstName']}
+                Last name: {recipient['LastName']}
+            6. Ensure the email mimics a legitimate communication from a car lease service.
+            7. Avoid unnecessary urgency or threatening language to maintain credibility.
+            8. Avoid any mention of placeholders like `[Link]`, `[Date]`, `[Action]`.
+            9. Avoid any generically formatted placeholders.
+            10. Avoid any mentions to dates or times
+            11. Provide a closing statement and the sender's signature.              
             """
+
     elif prompt == "Insurance":
         body_prompt = f"""
         Write a phishing email designed for an anti-phishing campaign related to insurance services:
         - Sender: A representative from the {sender_role} department.
         - Recipient: {recipient['FirstName']} {recipient['LastName']} ({recipient['Role']}).
         - Reason: {reason} (e.g., updating dependent details, pending insurance premiums, or suspicious claims).
-        - Incorporate this fake link naturally: {fake_link}.
+        - Provide only the body of the email (no subject line or additional notes).
+        - Incorporate this fake link naturally: {fake_link} and show it as following:
+            - real html link text <a class="hyperlink">click here</a>'.
+            - or html button html <a class="cta">click here</a>'.
         - The email should also be in the {recipient['PreferredLanguage']}.
+        - Avoid any generically formatted placeholders.
         The email should be brief, professional, and include a logical call to action, such as reviewing the insurance details or confirming coverage updates.
         """
     else:
@@ -122,7 +139,7 @@ def generate_email_content(model, recipient, sender_role, reason, prompt, fake_l
 
     return email_subject, email_body
 
-def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLATE,fallback,email_rules):
+def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLATE,fallback,email_rules, config):
     """Generate phishing emails for all recipients."""
     emails = []
    
@@ -133,6 +150,7 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
         sender_role = "General Department"
         reason = "General Security Notice"
         prompt = "General"
+        logo = config.get("PROXIMUS_LOGO")
         if rule:
             sender_role = random.choice(rule["CreatedBy"])
             reason = rule["Reason"]
@@ -144,28 +162,24 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
                 selected_rule = random.choice(leasing_rules)
                 reason = selected_rule["Reason"]
                 prompt = "CarLease"
+                logo = config.get("ALPHABET_LOGO")
                 sender_role = random.choice(selected_rule["CreatedBy"])
 
         elif recipient.get("Insurance") and random.random() > 0.5:
             # Filter email rules for insurance based on recipient's "Insurance" attribute
-            insurance_rules = [rule for rule in email_rules if recipient["Insurance"] in rule["CreatedBy"]]
+            insurance_rules = [rule for rule in email_rules
+                                if any(recipient["Insurance"] in creator for creator in rule["CreatedBy"])
+]
             if insurance_rules:
                 selected_rule = random.choice(insurance_rules)
                 reason = selected_rule["Reason"]
                 prompt = "Insurance"
+                logo = config.get("DKV_LOGO")
                 sender_role = random.choice(selected_rule["CreatedBy"])
 
         try:
             subject, body = generate_email_content(model, recipient, sender_role, reason, prompt, fake_link)
-            #Basma_start
-            # Insert the button before the "Thank you" line
-            button_html = '<a class="cta">Click Here</a>'
-            if "Thank you," in body:
-                body = body.replace("Thank you,", f"{button_html}\n\nThank you,")
-            else:
-                # Fallback if "Thank you," is not present
-                body += f"\n\n{button_html}\n\nThank you, {sender_role}"
-            #Basma_end
+         
             try:
                 # Generate phishing explanation line
                 explanation_prompt=f"Reasons why this is a phishing email {body}"
@@ -182,7 +196,7 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
    
            # Fill the HTML template #Basma
         html_email = HTML_TEMPLATE.format(
-            logo="https://logos-world.net/wp-content/uploads/2023/04/Proximus-Logo.png",
+            logo= logo,
             subject=subject,
             body=body,
             sender_role=sender_role,
@@ -216,12 +230,15 @@ def main():
     fallback_file = "./assets/fallback.json"
     fake_link = ""  # Replace with your fake link
     html_template_file =  "assets/email_html_template.html"
+    config_file = "config.json"
+    
 
     try:
         # Load data
         recipients = load_json(employee_file)
         email_rules = load_json(rules_file)
         fallback = load_json(fallback_file)
+        config = load_json(config_file)
 
         try:
             with open(html_template_file, "r") as file:
@@ -237,7 +254,7 @@ def main():
         role_to_rule_map = create_role_to_rule_map(email_rules)
 
         # Generate phishing emails
-        emails = generate_emails(model, recipients, role_to_rule_map, fake_link,email_html_template,fallback,email_rules)
+        emails = generate_emails(model, recipients, role_to_rule_map, fake_link,email_html_template,fallback,email_rules, config)
 
         # Example: Save emails to HTML files --- to be deleted
         for idx, email in enumerate(emails):
