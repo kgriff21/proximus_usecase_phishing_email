@@ -42,37 +42,78 @@ def create_role_to_rule_map(email_rules):
     return role_map
 
 
-def generate_email_content(model, recipient, sender_role, reason, fake_link):
+def get_body_prompt(prompt,recipient, sender_role, reason, fake_link ):
+    """Return body prompt based on prompt type"""
+    if(prompt == "General"):        
+        body_prompt = f"""
+        **Parameters:**
+        - **Sender**: A person from the `{sender_role}` department.
+        - **Recipient**: `{recipient['FirstName']}`.
+        - **Purpose of the email**: `{reason}`.
+        - **Language**: The email should be written in `{recipient['PreferredLanguage']}`.
+
+        **Guidelines**:
+        1. Keep the email brief, professional, and realistic.
+        2. Follow this structure and tone:
+            Dear [Name],
+            We have rolled out new features on the analytics dashboard to enhance data analysis efficiency. Please review these updates and confirm functionality.
+            Thank you,
+            Data Analytics Team
+        3. Maintain a professional tone; avoid any language implying urgency or causing unnecessary alarm 
+        4. Don't use Hi or Hello only Dear .
+        5. Use "Thank you" followed by `{sender_role}` to close the email.
+        6. The email must be concise, no more than 4-5 sentences.
+        7. Provide only the body of the email (no subject line or additional notes).
+        8. The signature should include only the sender's role or department (e.g., "Data Analytics Team")—no placeholder names.
+        9. Avoid explicitly mentioning dates, times, or indicating that this was AI-generated.
+        10. Avoid any mention of clicking links, links themselves or attached files .Instead, provide a complete email with no missing details
+        11. Avoid any mention of placeholders like `[Link]`, `[Date]`, `[Action]`.
+        12. Avoid any generically formatted placeholders.
+
+        **Output format**:  
+        Provide only the email body with appropriate line breaks for spacing, following the specified structure and tone.
+        """
+    elif prompt == "CarLease":
+            body_prompt = f"""
+            Write a phishing email designed for an anti-phishing campaign related to car lease services:
+            - Sender: A representative from the {sender_role} department.
+            - Reason: {reason} (e.g., payment overdue or unauthorized access detection).
+            - Incorporate this fake link naturally: {fake_link}.
+            - The email should also be in the {recipient['PreferredLanguage']}.
+            The email should be concise, professional, and include a plausible call to action, such as reviewing the lease details or verifying account security.
+            The email should be similar to the following example:
+                "Dear customer,
+                We would like to inform you with this message regarding a fine:
+                    Driver : {recipient['FirstName']} 
+                             {recipient['LastName']}
+
+                This mail is sent you via our partner Unifiedpost.
+                More information can be found on our website.
+                Through below link {fake_link} you can consult the letter and realted documents.
+
+                Kind regards,
+                Manager Opertional Services
+                {sender_role}"                
+            """
+    elif prompt == "Insurance":
+        body_prompt = f"""
+        Write a phishing email designed for an anti-phishing campaign related to insurance services:
+        - Sender: A representative from the {sender_role} department.
+        - Recipient: {recipient['FirstName']} {recipient['LastName']} ({recipient['Role']}).
+        - Reason: {reason} (e.g., updating dependent details, pending insurance premiums, or suspicious claims).
+        - Incorporate this fake link naturally: {fake_link}.
+        - The email should also be in the {recipient['PreferredLanguage']}.
+        The email should be brief, professional, and include a logical call to action, such as reviewing the insurance details or confirming coverage updates.
+        """
+    else:
+        body_prompt = "Invalid prompt type provided."
+    
+    return body_prompt
+
+def generate_email_content(model, recipient, sender_role, reason, prompt, fake_link):
     """Generate the email body and subject line using the Generative AI model."""
-    # Generate email body
-    body_prompt = f"""
-    **Parameters:**
-    - **Sender**: A person from the `{sender_role}` department.
-    - **Recipient**: `{recipient['FirstName']}`.
-    - **Purpose of the email**: `{reason}`.
-    - **Language**: The email should be written in `{recipient['PreferredLanguage']}`.
-
-    **Guidelines**:
-    1. Keep the email brief, professional, and realistic.
-    2. Follow this structure and tone:
-        Dear [Name],
-        We have rolled out new features on the analytics dashboard to enhance data analysis efficiency. Please review these updates and confirm functionality.
-        Thank you,
-        Data Analytics Team
-    3. Maintain a professional tone; avoid any language implying urgency or causing unnecessary alarm 
-    4. Don't use Hi or Hello only Dear .
-    5. Use "Thank you" followed by `{sender_role}` to close the email.
-    6. The email must be concise, no more than 4-5 sentences.
-    7. Provide only the body of the email (no subject line or additional notes).
-    8. The signature should include only the sender's role or department (e.g., "Data Analytics Team")—no placeholder names.
-    9. Avoid explicitly mentioning dates, times, or indicating that this was AI-generated.
-    10. Avoid any mention of clicking links, links themselves or attached files .Instead, provide a complete email with no missing details
-    11. Avoid any mention of placeholders like `[Link]`, `[Date]`, `[Action]`.
-    12. Avoid any generically formatted placeholders.
-
-    **Output format**:  
-    Provide only the email body with appropriate line breaks for spacing, following the specified structure and tone.
-    """
+  
+    body_prompt = get_body_prompt(prompt,recipient, sender_role, reason, fake_link )
     email_body = generate_content(body_prompt, model)
   
     # Generate email subject line
@@ -91,28 +132,31 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
         # Default values if no specific rule matches
         sender_role = "General Department"
         reason = "General Security Notice"
+        prompt = "General"
         if rule:
             sender_role = random.choice(rule["CreatedBy"])
             reason = rule["Reason"]
 
         if recipient.get("CarLease") and random.random() > 0.5:
-            # Filter email rules for "Leasing Department"
-            leasing_rules = [rule for rule in email_rules if "Manger Operational Services" in rule["Roles"]]
+            # Filter email rules for "Alphabet" (CarLease)
+            leasing_rules = [rule for rule in email_rules if "Alphabet" in rule["CreatedBy"]]
             if leasing_rules:
                 selected_rule = random.choice(leasing_rules)
                 reason = selected_rule["Reason"]
+                prompt = "CarLease"
                 sender_role = random.choice(selected_rule["CreatedBy"])
 
-        elif recipient.get("DependentCount", 0) > 0 and random.random() > 0.5:
-            # Filter email rules for "DKV Insurance Management"
-            insurance_rules = [rule for rule in email_rules if "DKV Insurance Management" in rule["Roles"]]
+        elif recipient.get("Insurance") and random.random() > 0.5:
+            # Filter email rules for insurance based on recipient's "Insurance" attribute
+            insurance_rules = [rule for rule in email_rules if recipient["Insurance"] in rule["CreatedBy"]]
             if insurance_rules:
                 selected_rule = random.choice(insurance_rules)
                 reason = selected_rule["Reason"]
+                prompt = "Insurance"
                 sender_role = random.choice(selected_rule["CreatedBy"])
 
         try:
-            subject, body = generate_email_content(model, recipient, sender_role, reason, fake_link)
+            subject, body = generate_email_content(model, recipient, sender_role, reason, prompt, fake_link)
             #Basma_start
             # Insert the button before the "Thank you" line
             button_html = '<a class="cta">Click Here</a>'
