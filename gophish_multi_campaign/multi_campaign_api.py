@@ -5,6 +5,7 @@ import json
 import os
 import re
 from datetime import date
+from bs4 import BeautifulSoup
 
 this_day=date.today()
 
@@ -29,7 +30,33 @@ class SingleCampaign():
             if item.name == page_name:
                 return (item.redirect_url)
         return None
+    
+    def update_landing_page(self, explanation):
+        #Load the base html for landing page
+        try:
+            with open("assets/base_html_page.html", "r") as file:
+                html_content = file.read()
+        except Exception as e:
+            print(f"Error loading base html page: {e}")
 
+        # Parse the HTML content
+        soup = BeautifulSoup(html_content, 'html.parser')
+
+        # Find the explanation section
+        explanation_div = soup.find('div', class_='explanation')
+
+        
+        # Modify the explanation content
+        explanation_div.clear()  # Clear the current content
+        explanation_div.append(BeautifulSoup(explanation, 'html.parser'))  # Add new content
+
+        # Save the updated HTML back to the file
+        #with open(self.modified_html, 'w', encoding='utf-8') as file:
+        #    file.write(str(soup))
+        
+        print("HTML updated successfully!")
+        return str(soup)
+    
     def create_landing_page(self, landing_page_name, html_content):
         try:
             # Define the landing page object
@@ -57,7 +84,7 @@ class SingleCampaign():
         user = User(
             first_name=first_name,
             last_name=last_name, 
-            email=email,
+            email="adhibecode@gmail.com",#email,
             position=position
         )
         return user
@@ -98,18 +125,18 @@ class SingleCampaign():
     
     
     
-    def create_campaign(self, group_name, landing_page_name):
+    def create_campaign(self, name):
         sender_profile="Test profile"
-        landing_page=landing_page_name
-        template = "test template final"
-        groups = [Group(name=group_name)]
+        landing_page=name
+        template = name
+        groups = [Group(name=name)]
         page = Page(name=landing_page)
         template = Template(name=template)
         smtp = SMTP(name=sender_profile)
         url="http://127.0.0.1"
 
         campaign = Campaign(
-        name=f"proximus_campaign-{this_day}", groups=groups, page=page,
+        name=name, groups=groups, page=page,
         template=template, smtp=smtp,url=url)
 
         campaigns = self.api.campaigns.get()
@@ -125,6 +152,8 @@ class SingleCampaign():
     def modify_email_body(self, body, landing_page_url):
         # Replace all hrefs in the HTML
         updated_html = re.sub(r'href="[^"]+"', f'href="{landing_page_url}"', body)
+        #re.sub(r'<a(?:\s+href="[^"]*")?', f'<a href="{landing_page_url}"', body)
+        
         return updated_html
     
     def beautify_explanation(self, explanation):
@@ -142,42 +171,16 @@ class SingleCampaign():
 
 def main():
     api=SingleCampaign()
-    landing_page_name = "Test landing"
-    template_name = "test template final"
-    landing_page_url = api.get_landing_page_url(landing_page_name)
-    
-    targets = []
     f = open("./assets/emails.json",'r')
     employees= json.load(f)
     for emp in employees:
-        
-            email_body = emp["body"]#api.modify_email_body(emp["body"], "")
-                
-            user=api.create_user(emp['Subject'], api.beautify_explanation(emp['explanation']),
-                                    emp["Email"], email_body)
+            targets = []
+            name = emp['FirstName']+emp['LastName']
+            user=api.create_user(emp['FirstName'],emp['LastName'],emp["Email"], emp["Role"])
             targets.append(user)
-
-    group_name = f"proximus_group-{this_day}"
-    api.create_usergroups(targets, group_name)
-    
-    #template=api.create_template(emp['FirstName'],emp['LastName'],emp["Subject"],emp["body"])
-    try:
-        with open("assets/base_html_page.html", "r") as file:
-            html_content = file.read()
-            landing_page_name = f"proximus_landing_page-{this_day}"
-                   
-    except Exception as e:
-            print(f"Error loading base html page: {e}")
-
-    api.create_landing_page(landing_page_name, html_content)
-    try:
-        with open("assets/gophish_email_template.html", "r") as file:
-            html_content = file.read()
-            template_name = f"proximus_email_template-{this_day}"       
-    except Exception as e:
-            print(f"Error loading base html page: {e}")
-
-    api.create_email_template(template_name, "{{.FirstName}}", html_content)
-
-    campaign=api.create_campaign(group_name, landing_page_name, )
-    print(campaign)
+            api.create_usergroups(targets, name)
+            html_content = api.update_landing_page(api.beautify_explanation(emp["explanation"]))
+            api.create_landing_page(name, html_content)
+            api.create_email_template(name, emp["Subject"], emp["body"])
+            campaign=api.create_campaign(name)
+            print(campaign)
