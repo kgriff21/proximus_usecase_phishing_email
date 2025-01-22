@@ -11,7 +11,6 @@ class GophishWrapper:
         :param api_url: The base URL for the Gophish instance.
         :param api_key: The API key to authenticate requests to Gophish.
         """
-        load_dotenv()
         
         self.api_url = os.getenv('GOPHISH_API_URL', api_url)
         self.api_key = os.getenv('GOPHISH_API_KEY', api_key)
@@ -41,7 +40,7 @@ class GophishWrapper:
             "password": password,
             "from_address": from_address,
             "tls": tls
-            # ssl: is possibly but outdated and insecure
+            # ssl is possible but outdated AF
         }
         return self._make_request("POST", "/smtp", data)
 
@@ -97,7 +96,7 @@ class GophishWrapper:
         :return: The response in JSON format, or None if an error occurs.
         """
         url = f"{self.api_url}{endpoint}"
-        response = requests.request(method, url, json=data, headers=self.headers, verify="C:/Program Files/GoPhish/gophish_admin.crt")
+        response = requests.request(method, url, json=data, headers=self.headers, verify=False)
         
         # Handle errors
         if response.status_code != 200:
@@ -119,7 +118,7 @@ class GophishWrapper:
         }
         return self._make_request("POST", "/groups", data)
 
-    def create_campaign(self, name: str, template_id: int, url: str, from_address: str, subject: str, group_id: int) -> Dict[str, Any]:
+    def create_campaign(self, name: str, template_id: int, url: str, from_address: str, group_id: int) -> Dict[str, Any]:
         """
         Create a new phishing campaign.
 
@@ -127,7 +126,6 @@ class GophishWrapper:
         :param template_id: The ID of the template to use.
         :param url: The URL to send to the target.
         :param from_address: The from address for the campaign emails.
-        :param subject: The subject for the phishing email.
         :param group_id: The ID of the target group.
         :return: The response from the API call (campaign data).
         """
@@ -135,13 +133,12 @@ class GophishWrapper:
             "name": name,
             "template": template_id,
             "url": url,
-            "from_address": from_address,
-            "subject": subject,
+            "from_address": from_address,           
             "group_id": group_id  # Associate the target group with the campaign
         }
         return self._make_request("POST", "/campaigns", data)
 
-    def create_template(self, name: str, html: str, text: str) -> Dict[str, Any]:
+    def create_template(self, name: str, html: str, text: str, subject: str) -> Dict[str, Any]:
         """
         Create a new phishing template.
 
@@ -153,7 +150,8 @@ class GophishWrapper:
         data = {
             "name": name,
             "html": html,
-            "text": text
+            "text": text,
+            "subject": subject
         }
         return self._make_request("POST", "/templates", data)
 
