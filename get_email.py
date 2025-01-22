@@ -136,14 +136,12 @@ def save_emails_to_file(emails, output_file):
 
     print(f"Generated emails have been saved to {output_file}")
 
-def main():
+def main(employee_file = "./assets/EmployeeInfo.json", output_file = "./assets/emails.json"):
     """Main function to generate phishing emails."""
     # File paths
-    employee_file = "./assets/EmployeeInfo.json"
     rules_file = "./assets/email_rules.json"
-    output_file = "./assets/emails.json"
     fallback_file = "./assets/fallback.json"
-    fake_link = "https://secure-update.example.com"  # Replace with your fake link
+    fake_link = "{{.URL}}"  # Replace with your fake link
     html_template_file =  "assets/email_html_template.html"
 
     try:
