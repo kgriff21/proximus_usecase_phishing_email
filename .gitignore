@@ -1,5 +1,5 @@
 # Ignore configuration files with sensitive data
 .venv
 .env
-__pycache__       
-venv/                            
+__pycache__
+venv/

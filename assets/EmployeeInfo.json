@@ -1,0 +1,82 @@
+[
+    {
+        "FirstName": "Soha",
+        "LastName": "M",
+        "Role": "Software Engineer",
+        "Email": "soha49084@gmail.com",
+        "PreferredLanguage": "English",
+        "CarLease": true,
+        "DependentCount": 2,
+        "Insurance": "DKV"
+    },
+    {
+        "FirstName": "K",
+        "LastName": "Fox",
+        "Role": "HR",
+        "Email": "angus.mccloud@gmail.com",
+        "PreferredLanguage": "English",
+        "CarLease": false,
+        "DependentCount": 0,
+        "Insurance": "DKV"
+    },
+    {
+        "FirstName": "Basma",
+        "LastName": "E",
+        "Role": "UI/UX Designer",
+        "Email": "basma1991es@gmail.com",
+        "PreferredLanguage": "English",
+        "CarLease": true,
+        "DependentCount": 3,
+        "Insurance": "DKV"
+    },
+    {
+        "FirstName": "Kelli",
+        "LastName": "G",
+        "Role": "Data Scientist",
+        "Email": "kgpythonpractice@gmail.com",
+        "PreferredLanguage": "English",
+        "CarLease": false,
+        "DependentCount": 0,
+        "Insurance": "DKV"
+    },
+    {
+        "FirstName": "Benoît",
+        "LastName": "Hespel",
+        "Role": "Head of AI @ Proximus Ada",
+        "Email": "benoit.hespel@proximus-ada.com",
+        "PreferredLanguage": "English",
+        "CarLease": true,
+        "DependentCount": 3,
+        "Insurance": "DKV"
+    },
+    {
+        "FirstName": "Bas",
+        "LastName": "Van Assche",
+        "Role": "CSIRT Analyst @ Proximus Ada",
+        "Email": "bas.van.assche@proximus-ada.com",
+        "PreferredLanguage": "English",
+        "CarLease": true,
+        "DependentCount": 1,
+        "Insurance": "DKV"
+    },
+    {
+        "FirstName": "Rasmita",
+        "LastName": "D",
+        "Role": "Data Engineer",
+        "Email": "rdait96@gmail.com",
+        "PreferredLanguage": "English",
+        "CarLease": false,
+        "DependentCount": 0,
+        "Insurance": "DKV"
+    },
+    {
+        "FirstName": "Adeeba",
+        "LastName": "T",
+        "Role": "Data Engineer",
+        "Email": "adhibecode@gmail.com",
+        "PreferredLanguage": "English",
+        "CarLease": false,
+        "DependentCount": 0,
+        "Insurance": "DKV"
+    }
+]

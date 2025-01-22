@@ -1,0 +1,189 @@
+[
+    {
+        "Reason": "Account Suspicious Activity",
+        "Roles": [
+            "IT",
+            "Data Security"
+        ],
+        "CreatedBy": [
+            "IT",
+            "Data Security"
+        ]
+    },
+    {
+        "Reason": "Password Expiry Notification",
+        "Roles": [
+            "IT",
+            "Software Engineer"
+        ],
+        "CreatedBy": [
+            "IT"
+        ]
+    },
+    {
+        "Reason": "Exclusive Training Webinar",
+        "Roles": [
+            "HR"
+        ],
+        "CreatedBy": [
+            "HR"
+        ]
+    },
+    {
+        "Reason": "Email Storage Full",
+        "Roles": [
+            "IT",
+            "Data Security"
+        ],
+        "CreatedBy": [
+            "IT",
+            "Data Security"
+        ]
+    },
+    {
+        "Reason": "Important Security Update",
+        "Roles": [
+            "IT",
+            "Data Security"
+        ],
+        "CreatedBy": [
+            "IT",
+            "Data Security"
+        ]
+    },
+    {
+        "Reason": "New Policy Acknowledgment Required",
+        "Roles": [
+            "HR"
+        ],
+        "CreatedBy": [
+            "HR"
+        ]
+    },
+    {
+        "Reason": "Urgent Billing Issue",
+        "Roles": [
+            "Finance"
+        ],
+        "CreatedBy": [
+            "Finance"
+        ]
+    },
+    {
+        "Reason": "System Maintenance Notification",
+        "Roles": [
+            "IT",
+            "Data Engineer"
+        ],
+        "CreatedBy": [
+            "IT"
+        ]
+    },
+    {
+        "Reason": "Urgent: System Update Required",
+        "Roles": [
+            "Chief Executive Officer of the Proximus Group"
+        ],
+        "CreatedBy": [
+            "Guillaume Boutin"
+        ]
+    },
+    {
+        "Reason": "**Corporate Affairs Update Required**",
+        "Roles": [
+            "Corporate Affairs Lead"
+        ],
+        "CreatedBy": [
+            "Ben Appel"
+        ]
+    },
+    {
+        "Reason": "Update Required: Consumer Market Lead",
+        "Roles": [
+            "Consumer Market Lead"
+        ],
+        "CreatedBy": [
+            "Jim Casteele"
+        ]
+    },
+    {
+        "Reason": "Urgent Infrastructure Update Notice",
+        "Roles": [
+            "Enterprise IT Services & Segments Lead"
+        ],
+        "CreatedBy": [
+            "Anne-Sophie Lotgering"
+        ]
+    },
+    {
+        "Reason": "Urgent system update required",
+        "Roles": [
+            "Digital & IT Lead"
+        ],
+        "CreatedBy": [
+            "Antonietta Mastroianni"
+        ]
+    },
+    {
+        "Reason": "**Urgent Bank Statement Review**",
+        "Roles": [
+            "Finance Lead"
+        ],
+        "CreatedBy": [
+            "Mark Reid"
+        ]
+    },
+    {
+        "Reason": "**Network Access Review Required**",
+        "Roles": [
+            "Network & Wholesale Lead"
+        ],
+        "CreatedBy": [
+            "Geert Standaert"
+        ]
+    },
+    {
+        "Reason": "Urgent Security Policy Update",
+        "Roles": [
+            "Enterprise Telco Services & Ops Lead"
+        ],
+        "CreatedBy": [
+            "Renaud Tilmans"
+        ]
+    },
+    {
+        "Reason": "\"New Hiring Policy Update\"",
+        "Roles": [
+            "Human Capital Lead"
+        ],
+        "CreatedBy": [
+            "Jan Van Acoleyen"
+        ]
+    },
+    {
+        "Reason": "\"Speed fine\"",
+        "Roles": ["Manger Operational Services"],
+        "CreatedBy": ["Alphabet"]
+    },
+    {
+        "Reason": "\"Leasing car payment overdue\"",
+        "Roles": ["Manger Operational Services"],
+        "CreatedBy": ["Alphabet"]
+    },
+    {
+        "Reason": "\"Unauthorized leasing car access\"",
+        "Roles": ["Manger Operational Services"],
+        "CreatedBy": ["Alphabet"]
+    },
+    {
+        "Reason": "\"Pending insurance premium for DKV\"",
+        "Roles": ["DKV Insurance Management"],
+        "CreatedBy": ["DKV Insurance Management"]
+    },
+    {
+        "Reason": "\"Suspicious insurance claim detected for DKV\"",
+        "Roles": ["DKV Insurance Management"],
+        "CreatedBy": ["DKV Insurance Management"]
+    }
+    
+]
