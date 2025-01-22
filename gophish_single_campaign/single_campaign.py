@@ -181,5 +181,3 @@ def main():
 
     campaign=api.create_campaign(group_name, landing_page_name, )
     print(campaign)
-
-main()
