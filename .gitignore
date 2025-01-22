@@ -1,6 +1,5 @@
 # Ignore configuration files with sensitive data
-config.json
-token.json
-credentials.json
 .venv
 .env
+__pycache__       
+venv/                            
