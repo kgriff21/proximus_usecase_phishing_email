@@ -3,13 +3,15 @@ import os
 import random
 from dotenv import load_dotenv
 import google.generativeai as genai
+import time
 
 # Load environment variables
 load_dotenv()
 
 
 def generate_content(prompt,model):
-    response = model.generate_content(prompt)
+
+    response = model.generate_content(prompt)  
     return response.text.strip()
 
 def configure_genai():
@@ -124,7 +126,7 @@ def get_body_prompt(prompt,recipient, sender_role, reason, fake_link ):
         - The email should also be in the {recipient['PreferredLanguage']}.
         - Avoid any generically formatted placeholders such as [[sender_name]], [Company name], [Representative Name], [Your Name].
         - Avoid any mentions to dates or times, or phone number
-        - Avoid placeholders such as `[Your Name]`, `[Date]`, `[Action]`, or any similar placeholders
+        - Avoid placeholders such as `[Your Name]`, `[Representative Name]`, `[Date]`, `[Action]`, or any similar placeholders
         The email should be brief, professional, and include a logical call to action, such as reviewing the insurance details or confirming coverage updates.
         """
     else:
@@ -134,7 +136,7 @@ def get_body_prompt(prompt,recipient, sender_role, reason, fake_link ):
 
 def generate_email_content(model, recipient, sender_role, reason, prompt, fake_link):
     """Generate the email body and subject line using the Generative AI model."""
-  
+
     body_prompt = get_body_prompt(prompt,recipient, sender_role, reason, fake_link )
     email_body = generate_content(body_prompt, model)
   
@@ -150,7 +152,7 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
    
     for recipient in recipients:
         rule = role_to_rule_map.get(recipient["Role"], None)
-
+       
         # Default values if no specific rule matches
         sender_role = "General Department"
         reason = "General Security Notice"
@@ -159,7 +161,7 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
         if rule:
             sender_role = random.choice(rule["CreatedBy"])
             reason = rule["Reason"]
-
+            
         if (recipient.get("CarLease") and random.random() > 0.5) or (recipient.get("CarLease") and "Alphabet" in sender_role):
             # Filter email rules for "Alphabet" (CarLease)
             leasing_rules = [rule for rule in email_rules if "Alphabet" in rule["CreatedBy"]]
@@ -169,7 +171,7 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
                 prompt = "CarLease"
                 logo = config.get("ALPHABET_LOGO")
                 sender_role = random.choice(selected_rule["CreatedBy"])
-
+              
         elif (recipient.get("Insurance") and random.random() > 0.5)  or (recipient.get("Insurance")  in sender_role):
             # Filter email rules for insurance based on recipient's "Insurance" attribute
             insurance_rules = [rule for rule in email_rules
@@ -181,37 +183,32 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
                 prompt = "Insurance"
                 logo = config.get("DKV_LOGO")
                 sender_role = random.choice(selected_rule["CreatedBy"])
-
+              
         try:
+
             subject, body = generate_email_content(model, recipient, sender_role, reason, prompt, fake_link)
-         
-            try:
-                # Generate phishing explanation line
-                explanation_prompt=f"Reasons why this is a phishing email {body}"
-                explanation = generate_content(explanation_prompt,model)
-            except:
-                 explanation = fallback["explanation"]
-        except:
-            if not  body:
-                body = fallback["body"]
-            if not  subject:
-                subject= fallback["subject"]
-            if not  explanation:
-               explanation = fallback["explanation"]
-
-        border_color = "#663399" 
-        if(logo == config.get("DKV_LOGO")):
-            border_color = "#095751"  
-   
-           # Fill the HTML template #Basma
-        html_email = HTML_TEMPLATE.format(
-            logo= logo,
-            subject=subject,
-            body=body,
-            sender_role=sender_role,
-            border_color=border_color
-        )
-
+            
+            # Generate phishing explanation line
+            explanation_prompt=f"Reasons why this is a phishing email {body}"
+            explanation = generate_content(explanation_prompt,model)    # Fill the HTML template #Basma
+            
+            border_color = "#663399" 
+            if(logo == config.get("DKV_LOGO")):
+                border_color = "#095751" 
+            html_email = HTML_TEMPLATE.format(
+                logo= logo,
+                subject=subject,
+                body=body,
+                sender_role=sender_role,
+                border_color=border_color
+            ).strip() 
+        
+        except:          
+            html_email = fallback[0]["body"]        
+            subject= fallback[0]["subject"]        
+            explanation = fallback[0]["explanation"]
+ 
+    
         emails.append({            
             "FirstName": recipient['FirstName'],
             "LastName" : recipient['LastName'],
@@ -221,6 +218,10 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
             "Subject": subject,
             "explanation": explanation
         })
+        # Add a delay to ensure the model isn't overloaded
+        #To avoid  Error generate_content(): 429 Resource has been exhausted 
+        # (e.g. check quota).
+        time.sleep(0.5)  # Pause for 300 milliseconds
 
     return emails
 
@@ -240,7 +241,6 @@ def main(employee_file = "./assets/EmployeeInfo.json", output_file = "./assets/e
     html_template_file =  "assets/email_html_template.html"
     config_file = "config.json"
     
-
     try:
         # Load data
         recipients = load_json(employee_file)
@@ -287,8 +287,6 @@ def main(employee_file = "./assets/EmployeeInfo.json", output_file = "./assets/e
                 html_file.write(html_content)
             print(f"Saved email {i+1} as {file_name}")
         #Basma End
-
-        
 
     except Exception as e:
         print(f"Error: {e}")
