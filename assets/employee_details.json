@@ -1,0 +1,12 @@
+[
+    {
+        "FirstName": "R",
+        "LastName": "D",
+        "Role": "Data Engineer",
+        "Email": "rdait@gmail.com",
+        "PreferredLanguage": "English",
+        "CarLease": "Yes",
+        "DependentCount": 2,
+        "Insurance": "DKV"
+    }
+]

@@ -55,9 +55,9 @@ class Api_utils:
 
 
 
-def main():
+def main(input_file= "./assets/emails.json"):
     api=Api_utils()
-    f = open("./assets/emails.json",'r')
+    f = open(input_file,'r')
     employees= json.load(f)
     for emp in employees:
         group=api.create_usergroups(emp['FirstName'],emp['LastName'],emp["Email"])
