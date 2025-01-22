@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {{
             font-family: 'Arial', sans-serif;
@@ -21,10 +22,14 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
             border: 1px solid #ddd;
         }}
+        .header {{
+            border-bottom: 5px solid  var(--border-color,#663399); /* Add the purple line */
+          
+        }}
         .header img {{
-            max-width: 120px;
+            max-width: 150px;
             display: block;
-            margin: 10px auto 10px auto;
+            margin: 15px auto 15px auto;
             position: relative;
         }}
         .body {{
@@ -32,9 +37,9 @@
             font-size: 16px;
         }}
         .body h1 {{
-            font-size: 22px;
+            font-size: 18px;
             font-weight: bold;
-            color: #0046a8;
+            color: #212121;
             margin-bottom: 20px;
         }}
         .body p {{
@@ -45,7 +50,7 @@
             width: fit-content;
             margin: 25px auto;
             padding: 15px 30px;
-            background-color: #0046a8;
+            background-color: #663399;
             color: #fff;
             font-size: 16px;
             text-decoration: none;
@@ -56,8 +61,13 @@
             transition: all 0.3s ease-in-out;
         }}
         .cta:hover {{
-            background-color: #003580;
+            background-color: #4A266A;
             box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+        }}
+        .hyperlink {{
+
+            text-decoration: underline;
+            color: blue;
         }}
         .footer {{
             background-color: #f9f9f9;
@@ -81,20 +91,14 @@
 </head>
 <body>
     <div class="email-container">
-        <div class="header">
+        <div class="header" style="--border-color: {border_color};">
             <img src="{logo}" alt="Company Logo">
         </div>
         <div class="body">
             <h1>{subject}</h1>
-            <p>{body}</p>
-            <p>Thank you,<br>{sender_role} Team</p>
-            <a class="cta" href="{link}">Take Action Now</a>
+            <p style="white-space: pre-line;">{body}</p>
         </div>
-        <div class="footer">
-            <p>Proximus 'Boreal' Offices</p>
-            <p>Vooruitgangstraat 55, 1210 Sint-Joost-ten-Node</p>
-            <p>+32 2 205 4000</p>
-            <p><a href="https://www.proximus.be" target="_blank">Visit Proximus Belgium Website</a></p>
+        <div class="footer">           
         </div>
     </div>
 </body>
