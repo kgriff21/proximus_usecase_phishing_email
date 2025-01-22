@@ -23,12 +23,13 @@
             border: 1px solid #ddd;
         }}
         .header {{
-            border-bottom: 5px solid #663399; /* Add the red line */
+            border-bottom: 5px solid  var(--border-color,#663399); /* Add the purple line */
+          
         }}
         .header img {{
-            max-width: 120px;
+            max-width: 150px;
             display: block;
-            margin: 10px auto 10px auto;
+            margin: 15px auto 15px auto;
             position: relative;
         }}
         .body {{
@@ -90,7 +91,7 @@
 </head>
 <body>
     <div class="email-container">
-        <div class="header">
+        <div class="header" style="--border-color: {border_color};">
             <img src="{logo}" alt="Company Logo">
         </div>
         <div class="body">
