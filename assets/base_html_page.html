@@ -1,54 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang=en>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>You Have Been Phished</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            text-align: center;
-        }
-        h1 {
-            color: #d9534f;
-        }
-        p {
-            margin: 15px 0;
-        }
-        .explanation {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            text-align: left;
-            font-size: 0.95em;
-            color: #333;
-        }
-    </style>
+  <title>PhishNet Landing page</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+  .header{
+    background-color: #ffffff;
+    display: flex; /* Use flexbox to align elements */
+    justify-content: space-between; /* Distribute space between child elements */
+    align-items: center; /* Vertically align items */
+  }
+  .navLink{
+    display: inline-block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  b{
+    color:#EF5350;
+  }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>You Have Been Phished!</h1>
-        <p>This is a simulated phishing campaign conducted by your organization to raise awareness about email security.</p>
-        <div class="explanation">
-            {{.LastName}}
-        </div>
-        <p style="margin-top: 20px; font-size: 0.9em; color: #555;">Remember, always verify the source of emails before clicking on links. Stay safe!</p>
+  <div class="header">
+    <div class="navLink">
+      <h3 style="margin:0; text-align:left;">
+        <img src="https://logos-world.net/wp-content/uploads/2023/04/Proximus-Logo.png" height="50">
+      </h3>
+    </div>
+    <div class="navLink">
+      <h3 style="margin:0; text-align:right;">
+        <img src="https://logos-world.net/wp-content/uploads/2023/04/Proximus-Logo.png" height="50">
+      </h3>
+    </div>
+  </div>
+ 
+  <div class="container" style="text-align:center">
+    <div class="jumbotron">
+      <h2><b>You have been Phished....</b></h2>
+      <h3>This is a simulated phishing campaign conducted by your organization to raise awareness about email security.</h3>
+    </div>
+    <div class="explanation">
+      {{.LastName}}
     </div>
 </body>
 </html>

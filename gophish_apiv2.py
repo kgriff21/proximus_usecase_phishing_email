@@ -2,7 +2,7 @@ import json
 import os
 from dotenv import load_dotenv
 from gophish_constructor import GophishWrapper
-from landingPages.landing_pages import LandingPages
+#from landingPages.landing_pages import LandingPages
 from gophish.models import *
 from bs4 import BeautifulSoup
 
@@ -64,16 +64,30 @@ def create_landing_page(landing_page_name, html_content):
 
 
 def beautify_explanation(explanation):
-        lines = explanation.split('\n')
+    lines = explanation.split('\n')
 
-        # Remove the leading '*' and any extra whitespace
-        points = [line.lstrip('*').strip() for line in lines]
+    # Remove the leading '*' and any extra whitespace
+    points = [line.lstrip('*').strip() for line in lines]
         # Convert points to a beautiful HTML list
-        new_explanation_html = "\n<ul>\n"
-        for point in points:
-            new_explanation_html += f"    <li>{point}</li>\n"
-        new_explanation_html += "</ul>"
-        return new_explanation_html
+    new_explanation_html = ""
+    tip_number = 1
+    for point in points:
+            new_explanation_html += f'<div class="col-md-4"><h1>Reason: #{tip_number}</h1>\n'
+            point = point.lstrip('0123456789.- ')
+            point = point.lstrip('**').strip()
+            content = point.split('**')
+          
+            if len(content) == 1:
+                    #new_explanation_html += f'<h2>Reason {tip}</h2>\n'
+                    new_explanation_html += f'<p>{content[0]}</p>\n'
+
+            elif len(content)==2:
+                    new_explanation_html += f'<h2>{content[0]}</h2>\n'
+                    new_explanation_html += f'<p>{content[1]}</p>\n'
+                   
+            new_explanation_html += f"</div>\n"
+            tip_number +=1
+    return new_explanation_html
 
 
 
