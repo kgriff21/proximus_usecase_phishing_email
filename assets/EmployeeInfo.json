@@ -14,7 +14,7 @@
         "LastName": "Fox",
         "Role": "HR",
         "Email": "angus.mccloud@gmail.com",
-        "PreferredLanguage": "English",
+        "PreferredLanguage": "French",
         "CarLease": false,
         "DependentCount": 0,
         "Insurance": "DKV"
@@ -22,9 +22,9 @@
     {
         "FirstName": "Basma",
         "LastName": "E",
-        "Role": "UI/UX Designer",
+        "Role": "Sales",
         "Email": "basma1991es@gmail.com",
-        "PreferredLanguage": "English",
+        "PreferredLanguage": "Dutch",
         "CarLease": true,
         "DependentCount": 3,
         "Insurance": "DKV"

@@ -52,7 +52,41 @@ with st.sidebar:
 
     st.markdown("""
     ### How to use?""")
-    st.write("1. Select the \"Single User Send\" or \"Bulk User Send\" tab.  \n 2. Fill in the employee details or upload a JSON file.  \n 3. Click on Send.  \n 4. Check Preview as the emails get generated.  \n 5. Review Campaign Statistics in the Gophish dashboard.")
+    st.write("1. Select the \"Single User Send\" or \"Bulk User Send\" tab.  \n 2. Fill in the employee details or upload a JSON file.  \n 3. Click on Send.  \n 4. Check Preview as the emails get generated.")
+    st.markdown(
+    """
+    <style>
+    a {
+        text-decoration: none !important;  /* Removes the underline */
+        color: #1f4e79 !important;         /* Ensures the text color inherits from the parent element */
+    }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #1f4e79;
+        background-color: #c9d1d9;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    .button:hover {
+        background-color: white;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+    )
+
+    # Add the clickable button
+    st.markdown(
+        '<a href="https://127.0.0.1:3333/" target="_blank" class="button">Review in Gophish dashboard</a>',
+        unsafe_allow_html=True,
+    )
+    #st.page_link("https://127.0.0.1:3333/", label='<span style="color: white;">5.Review Campaign Statistics in the Gophish dashboard.')
+    # Add your styled link
+    
 
 # Main area content
 st.header("Leverage the power of AI to send phishing emails.")

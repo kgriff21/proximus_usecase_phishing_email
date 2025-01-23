@@ -9,7 +9,7 @@ import time
 load_dotenv()
 
 
-def generate_content(prompt,model):
+def generate_content1(prompt,model):
     response = model.generate_content(prompt)
     if not response.parts:
         # Add a delay to ensure the model isn't overloaded
@@ -21,6 +21,22 @@ def generate_content(prompt,model):
 
     text = response.parts[0].text if response.parts else ""
     return text.strip()
+
+def generate_content(prompt, model, max_tokens=250):
+  retry_count = 0
+  while True:
+    response = model.generate_content(prompt)
+    text = response.text.strip() if response.text else ""
+    if len(text.split()) <= max_tokens:
+      return text
+    else:
+      print(f"Text length ({len(text.split())}) exceeds limit ({max_tokens})")
+      retry_count += 1
+      delay = min(2**retry_count, 60)  # Maximum delay of 60 seconds
+      print(f"Retrying after {delay} seconds...")
+      time.sleep(delay)
+      # Retry only when the text length exceeds the limit
+      continue 
 
 def configure_genai():
     """Configure the Generative AI API."""
@@ -54,30 +70,35 @@ def create_role_to_rule_map(email_rules):
 url = r"{{.URL}}"
 def get_body_prompt(prompt,recipient, sender_role, reason, fake_link ):
     """Return body prompt based on prompt type"""
-   
     if(prompt == "General"):  
-        anti_phish_campaign = "Write a professional phishing email for an anti-phishing campaign in a professional context:"  
+        anti_phish_campaign = "Simulate a phishing email for anti-phishing training."  
     elif(prompt == "Insurance"):    
-         anti_phish_campaign = " Write a phishing email designed for an anti-phishing campaign related to hospitalization insurance services:"
+         anti_phish_campaign = " Simulate a phishing email for anti-phishing training related to hospitalization insurance services:"
     elif(prompt == "CarLease"):  
-        anti_phish_campaign= "Write a phishing email designed for an anti-phishing campaign related to car lease services:" 
+        anti_phish_campaign= "Simulate a phishing email for anti-phishing training related to car lease services:" 
         
     body_prompt = f"""
         - {anti_phish_campaign} .
-        - Sender: A representative from the {sender_role} department.
-        - Recipient: {recipient['FirstName']} {recipient['LastName']} ({recipient['Role']}).
-        - Reason: {reason} (e.g., updating dependent details, pending insurance premiums, or suspicious claims).
-        - Provide only the body of the email (no subject line or additional notes).
-        - The email must be concise, brief and contains 6 - 8 sentences.
-        - Incorporate the fake link naturally and show it as one of the following:       
-            - real html link text <a href='{url}' class="hyperlink">click here</a>'.
-            - or html button <a href='{url}' class="cta">click here</a>'.
-        - The email should also be in the {recipient['PreferredLanguage']}.
-        - Avoid any mentions to dates or times, or phone number
-        - Do not include placeholders such as: `[Your Name]`, `[Representative Name]`, `[Date]`, `[Action]`.
-        - Avoid any mention to attached files.               
-        -The email should include a logical call to action, such as reviewing the insurance details or confirming coverage updates. 
-        - Output format:Provide only the email body with appropriate line breaks for spacing, following the specified structure and tone.
+        - Sender: {sender_role} department, {sender_role} is name of person don't include department.
+        - Recipient: {recipient['FirstName']} {recipient['LastName']}.
+        - Reason: {reason} (e.g., update details, insurance).
+        - Body only: 6-8 sentences.
+        - Include link: <a href='{url}' class="hyperlink">click here</a> or <a href='{url}' class="cta">click here</a>.
+        - Language: {recipient['PreferredLanguage']}.
+        - Avoid providing subject, only body mail.
+        - Avoid: Dates, times, phone numbers, placeholders, attachments.
+        - Call to action: Review details/confirm updates.
+        - Output: Email body with line breaks."
+        Key Optimizations:
+        - Removed redundant phrases: "professional context," "realistic simulation for better reflect real-world threats," "concise, brief" (implied by sentence count).
+        - Shortened phrases: "updating dependent details" to "update details," "pending insurance premiums" to "insurance."
+        - Removed unnecessary words: "Provide only the body of the email" (already implied by "Body only").
+        - Simplified language: "Incorporate a simulated phishing link naturally" to "Include link."
+        - Condensed disclaimer: The disclaimer can be significantly shortened or removed entirely if it's provided separately from the prompt.
+        This optimized prompt is significantly shorter while maintaining the core requirements and clarity.
+        Remember:
+            Adjust the level of detail based on the specific needs and token limits of the language model you are using.
+            
     """
     return body_prompt
 
@@ -88,7 +109,11 @@ def generate_email_content(model, recipient, sender_role, reason, prompt, fake_l
     email_body = generate_content(body_prompt, model)
   
     # Generate email subject line
-    subject_prompt = f"Write a compelling, realistic brief email subject for the following email:\n{email_body}. Do not include any specific dates or times."
+    subject_prompt = f"""Write a compelling, realistic brief email subject for the following email:\n{email_body}.
+    - Do not include any specific dates or times. 
+    - Do not include any placeholders
+    - Do not express urgency or create a sense of alarm"""
+
     email_subject = generate_content(subject_prompt, model)
 
     return email_subject, email_body
@@ -106,18 +131,37 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
         prompt = "General"
         logo = config.get("PROXIMUS_LOGO")
 
-        # Determine applicable categories (CarLease, Insurance)
+
+        # Define the weights for each category
+        weights = {
+            "General": 0.5,      # 50%
+            "CarLease": 0.2,     # 20%
+            "Insurance": 0.3     # 30%
+        }
+
+        # Determine applicable categories and their weights
         applicable_categories = []
-        applicable_categories.append("General")               
+        applicable_weights = []
+       
+        applicable_categories.append("General")
+        applicable_weights.append(weights["General"])
         if recipient.get("CarLease"):
             applicable_categories.append("CarLease")
+            applicable_weights.append(weights["CarLease"])
         if recipient.get("Insurance"):
             applicable_categories.append("Insurance")
+            applicable_weights.append(weights["Insurance"])
 
-        # Randomly select a category if multiple are applicable
-        selected_category = random.choice(applicable_categories) if applicable_categories else None
+        # Normalize weights to ensure they sum to 1
+        total_weight = sum(applicable_weights)
+        normalized_weights = [w / total_weight for w in applicable_weights]
 
-          # Apply rules for the selected category
+        # Select a category based on the normalized weights
+        selected_category = random.choices(applicable_categories, weights=normalized_weights, k=1)[0]
+
+        print(selected_category)
+
+        # Apply rules for the selected category
         if selected_category == "General":
             if rule:
                 sender_role = random.choice(rule["CreatedBy"])
@@ -145,7 +189,7 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
                 selected_rule = random.choice(insurance_rules)
                 reason = selected_rule["Reason"]
                 prompt = "Insurance"
-                logo = config.get("DKV_LOGO")
+                logo = config.get("DKV_LOGO")   
                 sender_role = random.choice(selected_rule["CreatedBy"])
 
         try:
@@ -154,8 +198,8 @@ def generate_emails(model, recipients, role_to_rule_map, fake_link, HTML_TEMPLAT
             try:
                 # Generate phishing explanation line
                 time.sleep(1) 
-                explanation_prompt=f"Reasons why this is a phishing email {body}"
-                explanation = generate_content(explanation_prompt,model)    # Fill the HTML template #Basma
+                explanation_prompt=f"""Reasons why this is a phishing email {body}"""
+                explanation = generate_content(explanation_prompt,model)
             except:
                 explanation = fallback[0]["explanation"]
 
