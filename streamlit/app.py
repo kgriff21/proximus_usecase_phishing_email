@@ -4,6 +4,7 @@ import sys
 sys.path.append(r'./')
 import get_email
 import gophish_api
+import gophish_apiv2
 
 # Set page title and layout
 st.set_page_config(page_title="Phish Net Team", layout="wide", page_icon="🕸️")
@@ -92,7 +93,7 @@ with tab1:
                 st.markdown(email["body"], unsafe_allow_html=True)
             
             st.success("Starting Email send..")
-            gophish_api.main("./assets/email.json")
+            gophish_apiv2.main("./assets/email.json")
 
             st.success("Email Sent!")
 
@@ -111,7 +112,7 @@ with tab2:
                         
             st.success("File uploaded successfully!")
             st.success("Generating emails...")
-            get_email.main("from_streamlit.json")
+            get_email.main(employee_file="from_streamlit.json")
 
             st.success("Emails Generated!")
             st.subheader("Emails Preview")
@@ -122,7 +123,7 @@ with tab2:
                 st.markdown(email["body"], unsafe_allow_html=True)
             
             st.success("Starting Email send..")
-            #gophish_api.main()
+            gophish_apiv2.main()
             st.success("Emails Sent!")
 
                    

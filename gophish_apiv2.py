@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 load_dotenv()
 
 api_key = os.getenv('GOPHISH_API_KEY')
+gmail_username=os.getenv('GMAIL_USERNAME')
 
 gophish = GophishWrapper(api_key)
 
@@ -119,21 +120,38 @@ def process_employee(emp):
         html_content = update_landing_page(beautify_explanation(emp["explanation"]))
         page=create_landing_page(name, html_content)
 
-        sender_profile="gmail_test"
-        smtp_profile = SMTP( name=sender_profile,
+
+        smtp_profile = SMTP( name="Gmail SMTP Profile", 
+                            host="smtp.gmail.com", port=587, 
+                            from_address=os.getenv('GMAIL_USERNAME'),
+                            interface_type="SMTP",
                             ignore_cert_errors=True)
-        
-        #smtp_profile = gophish.api.smtp.post(smtp_profile)
+        smtp_list=gophish.api.smtp.get()
+
+        smtp_exists=False
+        for smtp in smtp_list:
+            if smtp.username==smtp.from_address:
+                smtp_profile = SMTP( name=smtp.name,
+                            ignore_cert_errors=True)
+                smtp_exists=True
+                break
+
+        if smtp_exists == False:    
+            smtp_profile = gophish.api.smtp.post(smtp_profile)
+
         if not smtp_profile:
             print(f"SMTP profile creation failed. Skipping campaign creation.")
             return
+        
+        url="http://127.0.0.1"
 
         campaign = Campaign(
             name=f"{first_name} {last_name} Campaign",
             groups=[group],
             page=page,
             template=template,
-            smtp=smtp_profile
+            smtp=smtp_profile,
+            url=url
         )
 
         campaigns = gophish.api.campaigns.get()
@@ -155,9 +173,9 @@ def process_employee(emp):
 
 
 
-def main():
+def main(input_file= "./assets/emails.json"):
     try:
-        with open('./assets/emails.json', 'r') as f:
+        with open(input_file, 'r') as f:
             employees = json.load(f)
         
         if not isinstance(employees, list):
