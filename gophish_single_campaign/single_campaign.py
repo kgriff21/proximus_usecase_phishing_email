@@ -98,10 +98,10 @@ class SingleCampaign():
     
     
     
-    def create_campaign(self, group_name, landing_page_name):
+    def create_campaign(self, group_name, landing_page_name, template_name):
         sender_profile="Test profile"
         landing_page=landing_page_name
-        template = "test template final"
+        template = template_name
         groups = [Group(name=group_name)]
         page = Page(name=landing_page)
         template = Template(name=template)
@@ -144,10 +144,10 @@ def main():
     api=SingleCampaign()
     landing_page_name = "Test landing"
     template_name = "test template final"
-    landing_page_url = api.get_landing_page_url(landing_page_name)
+    #landing_page_url = api.get_landing_page_url(landing_page_name)
     
     targets = []
-    f = open("./assets/emails.json",'r')
+    f = open("./assets/emails_single_campaign.json",'r')
     employees= json.load(f)
     for emp in employees:
         
@@ -179,5 +179,5 @@ def main():
 
     api.create_email_template(template_name, "{{.FirstName}}", html_content)
 
-    campaign=api.create_campaign(group_name, landing_page_name, )
+    campaign=api.create_campaign(group_name, landing_page_name,template_name )
     print(campaign)
