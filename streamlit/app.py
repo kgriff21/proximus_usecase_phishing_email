@@ -1,11 +1,13 @@
 import streamlit as st
 import json
+import sys
+sys.path.append(r'./')
 import get_email
 import gophish_api
 
 # Set page title and layout
 st.set_page_config(page_title="Phish Net Team", layout="wide", page_icon="🕸️")
-with open('./style.css') as f:
+with open('./streamlit/style.css') as f:
     css = f.read()
 
 st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
@@ -48,10 +50,8 @@ with st.sidebar:
     """)
 
     st.markdown("""
-    ## How to use?
-    1.Fill in the employee details.\n
-    2.Click on Send Email.\n
-    3.Check Statistics in the Gophish dashboard""")
+    ### How to use?""")
+    st.write("1. Select the \"Single User Send\" or \"Bulk User Send\" tab.  \n 2. Fill in the employee details or upload a JSON file.  \n 3. Click on Send.  \n 4. Check Preview as the emails get generated.  \n 5. Review Campaign Statistics in the Gophish dashboard.")
 
 # Main area content
 st.header("Leverage the power of AI to send phishing emails.")
@@ -122,7 +122,7 @@ with tab2:
                 st.markdown(email["body"], unsafe_allow_html=True)
             
             st.success("Starting Email send..")
-            gophish_api.main()
+            #gophish_api.main()
             st.success("Emails Sent!")
 
                    

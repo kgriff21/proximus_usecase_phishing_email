@@ -1,15 +1,23 @@
 div.st-emotion-cache-1v0mbdj.e1wa958q1 
 {
-    height : 200px;
-    width : 200px;
-    padding-left: 60px
+    height : 220px;
+    width : 220px;
+    padding-left: 60px;
+    padding-bottom: px;
+    top: 0%;
 
+}
+
+
+div.st-emotion-cache-0.e12yskxj0
+{
+    height: 200px;
+    width: 300px;
 }
 
 div.st-emotion-cache-6qob1r.e1dbuyne8
 {
     background-image: linear-gradient(to bottom,#0d1117, #1f4e79);
-    text-align: center;
     color: white;
 }
 
