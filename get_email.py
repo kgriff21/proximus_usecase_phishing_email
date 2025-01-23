@@ -22,7 +22,7 @@ def generate_content1(prompt,model):
     text = response.parts[0].text if response.parts else ""
     return text.strip()
 
-def generate_content(prompt, model, max_tokens=250):
+def generate_content(prompt, model, max_tokens=300):
   retry_count = 0
   while True:
     response = model.generate_content(prompt)
@@ -79,7 +79,7 @@ def get_body_prompt(prompt,recipient, sender_role, reason, fake_link ):
         
     body_prompt = f"""
         - {anti_phish_campaign} .
-        - Sender: {sender_role} department, {sender_role} is name of person don't include department.
+        - Sender: {sender_role} department, {sender_role} if name of person don't include department.
         - Recipient: {recipient['FirstName']} {recipient['LastName']}.
         - Reason: {reason} (e.g., update details, insurance).
         - Body only: 6-8 sentences.
@@ -112,7 +112,8 @@ def generate_email_content(model, recipient, sender_role, reason, prompt, fake_l
     subject_prompt = f"""Write a compelling, realistic brief email subject for the following email:\n{email_body}.
     - Do not include any specific dates or times. 
     - Do not include any placeholders
-    - Do not express urgency or create a sense of alarm"""
+    - Do not express urgency or create a sense of alarm
+    - Language: {recipient['PreferredLanguage']}."""
 
     email_subject = generate_content(subject_prompt, model)
 
