@@ -3,13 +3,16 @@ import json
 import sys
 sys.path.append(r'./')
 import get_email
-import gophish_api
+import scrape_execs
 import gophish_apiv2
 
 # Set page title and layout
 st.set_page_config(page_title="Phish Net Team", layout="wide", page_icon="🕸️")
 with open('./streamlit/style.css') as f:
     css = f.read()
+
+#Scrape executives from the Proximus leaders page
+scrape_execs.main()
 
 st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
@@ -127,7 +130,7 @@ with tab1:
                 st.markdown(email["body"], unsafe_allow_html=True)
             
             st.success("Starting Email send..")
-            gophish_apiv2.main("./assets/email.json")
+            gophish_apiv2.main(input_file="./assets/email.json")
 
             st.success("Email Sent!")
 
@@ -140,24 +143,24 @@ with tab2:
         try:
             # Read the uploaded JSON file
             json_data = json.load(uploaded_file)
-            save_path = "from_streamlit.json" 
+            save_path = "./assets/from_streamlit.json" 
             with open(save_path, "w") as json_file:
                 json.dump(json_data, json_file, indent=4)
                         
             st.success("File uploaded successfully!")
             st.success("Generating emails...")
-            get_email.main(employee_file="from_streamlit.json")
+            get_email.main(employee_file="./assets/from_streamlit.json",output_file="./assets/emails_streamlit.json")
 
             st.success("Emails Generated!")
             st.subheader("Emails Preview")
 
-            with open("./assets/emails.json", "r", encoding="utf-8") as file:
+            with open("./assets/emails_streamlit.json", "r", encoding="utf-8") as file:
                 emails= json.load(file)
             for email in emails:
                 st.markdown(email["body"], unsafe_allow_html=True)
             
             st.success("Starting Email send..")
-            gophish_apiv2.main()
+            gophish_apiv2.main(input_file="./assets/emails_streamlit.json")
             st.success("Emails Sent!")
 
                    
