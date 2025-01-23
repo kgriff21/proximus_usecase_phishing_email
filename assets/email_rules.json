@@ -82,7 +82,8 @@
     {
         "Reason": "Urgent: System Update Required",
         "Roles": [
-            "Chief Executive Officer of the Proximus Group"
+            "Chief Executive Officer of the Proximus Group",
+            "HR"
         ],
         "CreatedBy": [
             "Guillaume Boutin"
@@ -91,7 +92,8 @@
     {
         "Reason": "**Corporate Affairs Update Required**",
         "Roles": [
-            "Corporate Affairs Lead"
+            "Corporate Affairs Lead",
+            "HR"
         ],
         "CreatedBy": [
             "Ben Appel"
@@ -100,7 +102,8 @@
     {
         "Reason": "Update Required: Consumer Market Lead",
         "Roles": [
-            "Consumer Market Lead"
+            "Consumer Market Lead",
+            "Sales"
         ],
         "CreatedBy": [
             "Jim Casteele"
@@ -109,7 +112,8 @@
     {
         "Reason": "Urgent Infrastructure Update Notice",
         "Roles": [
-            "Enterprise IT Services & Segments Lead"
+            "Enterprise IT Services & Segments Lead",
+            "IT"
         ],
         "CreatedBy": [
             "Anne-Sophie Lotgering"
@@ -118,7 +122,8 @@
     {
         "Reason": "Urgent system update required",
         "Roles": [
-            "Digital & IT Lead"
+            "Digital & IT Lead",
+            "IT"
         ],
         "CreatedBy": [
             "Antonietta Mastroianni"
@@ -127,7 +132,8 @@
     {
         "Reason": "**Urgent Bank Statement Review**",
         "Roles": [
-            "Finance Lead"
+            "Finance Lead",
+            "HR"
         ],
         "CreatedBy": [
             "Mark Reid"
@@ -136,7 +142,8 @@
     {
         "Reason": "**Network Access Review Required**",
         "Roles": [
-            "Network & Wholesale Lead"
+            "Network & Wholesale Lead",
+            "IT"
         ],
         "CreatedBy": [
             "Geert Standaert"
@@ -162,11 +169,6 @@
     },
     {
         "Reason": "\"Speed fine\"",
-        "Roles": ["Manger Operational Services"],
-        "CreatedBy": ["Alphabet"]
-    },
-    {
-        "Reason": "\"Leasing car payment overdue\"",
         "Roles": ["Manger Operational Services"],
         "CreatedBy": ["Alphabet"]
     },
