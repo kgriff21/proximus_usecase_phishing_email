@@ -72,6 +72,8 @@ def beautify_explanation(explanation):
     new_explanation_html = ""
     tip_number = 1
     for point in points:
+            if "greeting" in point:
+                continue
             new_explanation_html += f'<div class="col-md-4"><h1>Reason: #{tip_number}</h1>\n'
             point = point.lstrip('0123456789.- ')
             point = point.lstrip('**').strip()
@@ -87,6 +89,8 @@ def beautify_explanation(explanation):
                    
             new_explanation_html += f"</div>\n"
             tip_number +=1
+            if tip_number == 3:
+                break
     return new_explanation_html
 
 
