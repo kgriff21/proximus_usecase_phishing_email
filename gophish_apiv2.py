@@ -72,9 +72,10 @@ def beautify_explanation(explanation):
     new_explanation_html = ""
     tip_number = 1
     for point in points:
-            if "greeting" in point:
-                continue
+            #if "greeting" in point:
+            #    continue
             new_explanation_html += f'<div class="col-md-4"><h1>Reason: #{tip_number}</h1>\n'
+            '''
             point = point.lstrip('0123456789.- ')
             point = point.lstrip('**').strip()
             content = point.split('**')
@@ -86,11 +87,10 @@ def beautify_explanation(explanation):
             elif len(content)==2:
                     new_explanation_html += f'<h2>{content[0]}</h2>\n'
                     new_explanation_html += f'<p>{content[1]}</p>\n'
-                   
+            '''
+            new_explanation_html += f'<p>{point}</p>\n'  
             new_explanation_html += f"</div>\n"
             tip_number +=1
-            if tip_number == 3:
-                break
     return new_explanation_html
 
 
@@ -139,9 +139,11 @@ def process_employee(emp):
         page=create_landing_page(name, html_content)
 
 
-        smtp_profile = SMTP( name="Gmail SMTP Profile", 
+        smtp_profile = SMTP(name="Gmail SMTP Profile", 
                             host="smtp.gmail.com", port=587, 
                             from_address=os.getenv('GMAIL_USERNAME'),
+                            username=os.getenv('GMAIL_USERNAME'),
+                            password=os.getenv('GMAIL_PASSWORD'),
                             interface_type="SMTP",
                             ignore_cert_errors=True)
         smtp_list=gophish.api.smtp.get()

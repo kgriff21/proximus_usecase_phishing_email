@@ -84,7 +84,7 @@ with st.sidebar:
 
     # Add the clickable button
     st.markdown(
-        '<a href="https://127.0.0.1:3333/" target="_blank" class="button">Review in Gophish dashboard</a>',
+        '<a href="https://127.0.0.1:3333/campaigns" target="_blank" class="button">Review in Gophish dashboard</a>',
         unsafe_allow_html=True,
     )
     #st.page_link("https://127.0.0.1:3333/", label='<span style="color: white;">5.Review Campaign Statistics in the Gophish dashboard.')
