@@ -44,7 +44,7 @@ st.markdown(
 
 # Sidebar content
 with st.sidebar:
-    # Add the logo
+    # Logo
     st.image("./assets/phishnet_logo-modified.png", use_container_width=False)
 
     # About section
@@ -82,19 +82,17 @@ with st.sidebar:
     unsafe_allow_html=True,
     )
 
-    # Add the clickable button
     st.markdown(
         '<a href="https://127.0.0.1:3333/campaigns" target="_blank" class="button">Review in Gophish dashboard</a>',
         unsafe_allow_html=True,
     )
-    #st.page_link("https://127.0.0.1:3333/", label='<span style="color: white;">5.Review Campaign Statistics in the Gophish dashboard.')
-    # Add your styled link
     
 
 # Main area content
 st.header("Leverage the power of AI to send phishing emails.")
 tab1, tab2= st.tabs(["Single User Send", "Bulk User Send"])
 
+#Code for single user send
 with tab1:
     st.markdown("""
     Enter the employee details.
@@ -119,21 +117,30 @@ with tab1:
                 json.dump(as_list, file, indent=4, ensure_ascii=False)
 
             st.success("Generating email...")
-            get_email.main("./assets/employee_details.json", "./assets/email.json")
 
-            st.success("Email Generated!")
-            st.subheader("Email Preview")
+            try:
+                get_email.main("./assets/employee_details.json", "./assets/email.json")
+
+                st.success("Email Generated!")
+                st.subheader("Email Preview")
+                
+                with open("./assets/email.json", "r", encoding="utf-8") as file:
+                    emails= json.load(file)
+                for email in emails:
+                    st.markdown(email["body"], unsafe_allow_html=True)
+                
+                st.success("Starting Email send..")
+
+                try:
+                    gophish_apiv2.main(input_file="./assets/email.json")
+                    st.success("Email Sent!")
+                except:
+                    st.error("Unable to send email, please try again.")
             
-            with open("./assets/email.json", "r", encoding="utf-8") as file:
-                emails= json.load(file)
-            for email in emails:
-                st.markdown(email["body"], unsafe_allow_html=True)
-            
-            st.success("Starting Email send..")
-            gophish_apiv2.main(input_file="./assets/email.json")
+            except:
+                st.error("Email Generation Failed! Please try again.")
 
-            st.success("Email Sent!")
-
+#Bulk user send
 with tab2:
 
 # File uploader widget
@@ -149,19 +156,27 @@ with tab2:
                         
             st.success("File uploaded successfully!")
             st.success("Generating emails...")
-            get_email.main(employee_file="./assets/from_streamlit.json",output_file="./assets/emails_streamlit.json")
+            try:
+                get_email.main(employee_file="./assets/from_streamlit.json",output_file="./assets/emails_streamlit.json")
 
-            st.success("Emails Generated!")
-            st.subheader("Emails Preview")
+                st.success("Emails Generated!")
+                st.subheader("Emails Preview")
+                with open("./assets/emails_streamlit.json", "r", encoding="utf-8") as file:
+                    emails= json.load(file)
+                for email in emails:
+                    st.markdown(email["body"], unsafe_allow_html=True)
+                
+                st.success("Starting Email send..")
 
-            with open("./assets/emails_streamlit.json", "r", encoding="utf-8") as file:
-                emails= json.load(file)
-            for email in emails:
-                st.markdown(email["body"], unsafe_allow_html=True)
+                try:
+                    gophish_apiv2.main(input_file="./assets/emails_streamlit.json")
+                    st.success("Emails Sent!")
+                except:
+                    st.error("Unable to send email, please try again.")
+
             
-            st.success("Starting Email send..")
-            gophish_apiv2.main(input_file="./assets/emails_streamlit.json")
-            st.success("Emails Sent!")
+            except:
+                st.error("Email Generation Failed! Please try again.")
 
                    
         except Exception as e:

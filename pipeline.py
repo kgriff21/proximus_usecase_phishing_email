@@ -1,6 +1,6 @@
 import get_email
 import scrape_execs
-import gophish_api
+import gophish_apiv2
 
 #Scrape executives from the Proximus leaders page
 scrape_execs.main()
@@ -9,4 +9,4 @@ scrape_execs.main()
 get_email.main()
 
 #Launch Gophish to send emails to the employee
-gophish_api.main()
+gophish_apiv2.main()
