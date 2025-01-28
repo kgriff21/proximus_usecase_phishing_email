@@ -9,34 +9,19 @@ import time
 load_dotenv()
 
 
-def generate_content1(prompt,model):
+def generate_content(prompt,model):
     response = model.generate_content(prompt)
     if not response.parts:
         # Add a delay to ensure the model isn't overloaded
         # To avoid  Error generate_content(): 429 Resource has been exhausted 
         # (e.g. check quota).
         print("Error: No valid parts in the response.")
-        time.sleep(1)
+        time.sleep(2)
         return generate_content(prompt,model)
 
     text = response.parts[0].text if response.parts else ""
     return text.strip()
 
-def generate_content(prompt, model, max_tokens=300):
-  retry_count = 0
-  while True:
-    response = model.generate_content(prompt)
-    text = response.text.strip() if response.text else ""
-    if len(text.split()) <= max_tokens:
-      return text
-    else:
-      print(f"Text length ({len(text.split())}) exceeds limit ({max_tokens})")
-      retry_count += 1
-      delay = min(2**retry_count, 60)  # Maximum delay of 60 seconds
-      print(f"Retrying after {delay} seconds...")
-      time.sleep(delay)
-      # Retry only when the text length exceeds the limit
-      continue 
 
 def configure_genai():
     """Configure the Generative AI API."""
@@ -272,29 +257,9 @@ def main(employee_file = "./assets/EmployeeInfo.json", output_file = "./assets/e
         # Generate phishing emails
         emails = generate_emails(model, recipients, role_to_rule_map, fake_link,email_html_template,fallback,email_rules, config)
 
-        # Example: Save emails to HTML files --- to be deleted
-        for idx, email in enumerate(emails):
-            with open(f"email_{idx + 1}.html", "w", encoding="utf-8") as file:
-                file.write(email["body"])
-            break
-
         # Save emails to file
         save_emails_to_file(emails, output_file)
 
-
-        #Basma  --- to be deleted
-        # Load the JSON file
-        with open(output_file, 'r', encoding='utf-8') as file:
-            emails = json.load(file)
-
-        # Extract the body of the first email and save it as an HTML file
-        for i, email in enumerate(emails):
-            html_content = email['body']
-            file_name = f"email_Basma{i+1}.html"  # Save each email as a separate file
-            with open(file_name, 'w', encoding='utf-8') as html_file:
-                html_file.write(html_content)
-            print(f"Saved email {i+1} as {file_name}")
-        #Basma End
 
     except Exception as e:
         print(f"Error: {e}")
